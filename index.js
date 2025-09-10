@@ -1,39 +1,16 @@
- const http = require('http');
- const fs = require('fs');
+const express = require("express")
+const app = express()
 
- const host = '127.0.0.1';
- const port = 8080;
+app.get("/", (req, res) => res.sendFile(__dirname + "/index.html"))
+app.get("/about", (req, res) => res.sendFile(__dirname + "/about.html"))
+app.get("/contact-me", (req, res) => res.sendFile(__dirname + "/contact-me.html"))
+app.get("*unknown", (req, res) => res.sendFile(__dirname + "/404.html"))
 
- const httpServer = http.createServer(httpHandler);
 
- httpServer.listen(port, host, () => {
-     console.log(`HTTP server running at http://${host}:${port}/`);
- });
-
- function httpHandler(req, res) {
-    if(req.url == "/"){
-             fs.readFile('./' + "index.html", function (err, data) {
-
-         if (err == null ) {
-             res.writeHead(200, {'Content-Type': 'text/html'})
-             res.write(data)
-             res.end()
-         }
-     })
-    }
-     fs.readFile('./' + req.url, function (err, data) {
-
-         if (err == null ) {
-             res.writeHead(200, {'Content-Type': 'text/html'})
-             res.write(data)
-             res.end()
-         }
-         else{
-            fs.readFile('./' + "404.html", function (err, data) {
-                res.writeHead(200, {'Content-Type': 'text/html'})
-                res.write(data)
-                res.end()
-            })
-         }
-     })
- }
+const PORT = process.env.PORT || 8080
+app.listen(PORT, (error) => {
+  if (error) {
+    throw error
+  }
+  console.log(`My first Express app - listening on port ${PORT}!`)
+})
